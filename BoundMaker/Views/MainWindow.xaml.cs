@@ -13,12 +13,12 @@ namespace BoundMaker.Views
 {
     public partial class MainWindow : Window
     {
-        public const string ProjectStartDate = "Jan 29, 2011";
-        public const string OriginalReleaseDate = "April 23, 2011";
-        public const string MadeBy = "Roy";
-        public readonly string Email = Encoding.UTF8.GetString(new byte[] { 82, 111, 121, 95, 71, 97, 108, 108, 97, 110, 116, 64, 104, 111, 116, 109, 97, 105, 108, 46, 99, 111, 109 });
+        private const string ProjectStartDate = "Jan 29, 2011";
+        private const string OriginalReleaseDate = "April 23, 2011";
+        private const string MadeBy = "Roy";
+        private readonly string Email = Encoding.UTF8.GetString(new byte[] { 82, 111, 121, 95, 71, 97, 108, 108, 97, 110, 116, 64, 104, 111, 116, 109, 97, 105, 108, 46, 99, 111, 109 });
 
-        public static readonly string[] BetaTesters = new[] { "LeXteR", "Adzz" };
+        private static readonly string[] BetaTesters = new[] { "LeXteR", "Adzz" };
 
         private bool viewCode = false;
         private string currentFileName = "Untitled.xml";

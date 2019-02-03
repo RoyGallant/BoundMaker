@@ -4,8 +4,8 @@
     {
         public string CreateUnit(string player, string unitName, string locationName)
         {
-            player = player.Replace("Player ", "P");
-            unitName = unitName.Split(new[] { ' ' }, 2)[1];
+            player = player?.Replace("Player ", "P");
+            unitName = unitName?.Split(new[] { ' ' }, 2)[1];
 
             return $"CreateUnit(1, {unitName}, {locationName}, {player});";
         }
