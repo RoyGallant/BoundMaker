@@ -15,9 +15,9 @@ Check Releases.
 
 ### Development
 
-The vast majority of this code was haphazardly thrown together by a college student who had just started learning how to program. That said, it's gone through a hasty cleanup over the course of a weekend to get in a state where it can be uploaded to GitHub.
+The vast majority of this code was haphazardly thrown together by a college student who had just started learning how to program way back in 2011. That said, it's gone through a hasty cleanup over the course of a weekend to get in a state where it can be uploaded to GitHub.
 
-BoundMaker uses native WPF without any external libraries; getting started should be as simple as pulling down the repo and opening it in Visual Studio (or your preferred IDE). Pull requests for bug fixes, new features, maintenance, and/or testing are welcomed
+BoundMaker uses native WPF without any external libraries; getting started should be as simple as pulling down the repo and opening it in Visual Studio (or your preferred IDE). Pull requests for bug fixes, new features, maintenance, and/or testing are welcomed.
 
 ### Todos
 
