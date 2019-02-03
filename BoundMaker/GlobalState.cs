@@ -8,21 +8,21 @@ namespace BoundMaker
     public static class GlobalState
     {
         internal static Label SelectedTile { get; set; }
-        internal static bool Playing { get; set; }
+        internal static bool IsPlaying { get; set; }
         internal static List<MapLocation> Locations { get; set; }
         internal static List<BoundSequence> Sequences { get; set; }
-        internal static bool DraggingLocation { get; set; }
-        internal static bool ResizingLocation { get; set; }
-        internal static bool Mode_Explosion { get; set; }
-        internal static bool Mode_Location { get; set; }
-        internal static bool Mode_Terrain { get; set; }
+        internal static bool IsDraggingLocation { get; set; }
+        internal static bool IsResizingLocation { get; set; }
+        internal static bool ExplosionPanelIsActive { get; set; }
+        internal static bool LocationPanelIsActive { get; set; }
+        internal static bool TerrainPanelIsActive { get; set; }
         internal static int TerrainPlacementSize { get; set; }
         internal static string ExplosionType { get; set; }
         internal static Point LocationStart { get; set; }
-        internal static bool ResizeLeft { get; set; }
-        internal static bool ResizeRight { get; set; }
-        internal static bool ResizeUp { get; set; }
-        internal static bool ResizeDown { get; set; }
-        internal static bool ChangesMade { get; set; }
+        internal static bool IsResizingLeft { get; set; }
+        internal static bool IsResizingRight { get; set; }
+        internal static bool IsResizingUp { get; set; }
+        internal static bool IsResizingDown { get; set; }
+        internal static bool HasMadeChanges { get; set; }
     }
 }

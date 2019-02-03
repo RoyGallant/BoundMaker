@@ -57,7 +57,7 @@ namespace BoundMaker.Views
 
         private void MouseLeftButtonUpEventHandler(object sender, MouseEventArgs e)
         {
-            if (GlobalState.Playing)
+            if (GlobalState.IsPlaying)
             {
                 foreach (MapLocation loc in GlobalState.Locations)
                 {
@@ -65,17 +65,17 @@ namespace BoundMaker.Views
                 }
                 Cursor = Cursors.Arrow;
             }
-            GlobalState.DraggingLocation = false;
-            GlobalState.ResizingLocation = false;
+            GlobalState.IsDraggingLocation = false;
+            GlobalState.IsResizingLocation = false;
         }
 
         private void MouseMoveEventHandler(object sender, MouseEventArgs e)
         {
-            if (GlobalState.ResizingLocation)
+            if (GlobalState.IsResizingLocation)
             {
                 ResizeEventHandler(e);
             }
-            else if (GlobalState.DraggingLocation)
+            else if (GlobalState.IsDraggingLocation)
             {
                 DragEventHandler(e);
             }
@@ -115,7 +115,7 @@ namespace BoundMaker.Views
 
             DragLocation.SetHighlight(true);
             Point temp = e.GetPosition(MapCanvas);
-            if (GlobalState.ResizeLeft)
+            if (GlobalState.IsResizingLeft)
             {
                 while (temp.X - DragStart.X >= GridSize / 2 + 1 && DragLocation.Width > GridSize)
                 {
@@ -132,12 +132,12 @@ namespace BoundMaker.Views
                 if (temp.X - DragStart.X >= GridSize * 1.5 + 1 && DragLocation.Width <= GridSize)
                 {
                     Canvas.SetLeft(DragLocation, Canvas.GetLeft(DragLocation) + GridSize);
-                    GlobalState.ResizeLeft = false;
-                    GlobalState.ResizeRight = true;
+                    GlobalState.IsResizingLeft = false;
+                    GlobalState.IsResizingRight = true;
                     DragStart.X += GridSize * 2;
                 }
             }
-            else if (GlobalState.ResizeRight)
+            else if (GlobalState.IsResizingRight)
             {
                 while (temp.X - DragStart.X >= GridSize / 2 + 1)
                 {
@@ -152,12 +152,12 @@ namespace BoundMaker.Views
                 if (temp.X - DragStart.X <= -GridSize * 1.5 + 1 && DragLocation.Width <= GridSize)
                 {
                     Canvas.SetLeft(DragLocation, Canvas.GetLeft(DragLocation) - GridSize);
-                    GlobalState.ResizeLeft = true;
-                    GlobalState.ResizeRight = false;
+                    GlobalState.IsResizingLeft = true;
+                    GlobalState.IsResizingRight = false;
                     DragStart.X -= GridSize * 2;
                 }
             }
-            if (GlobalState.ResizeUp)
+            if (GlobalState.IsResizingUp)
             {
                 while (temp.Y - DragStart.Y >= GridSize / 2 + 1 && DragLocation.Height > GridSize)
                 {
@@ -174,12 +174,12 @@ namespace BoundMaker.Views
                 if (temp.Y - DragStart.Y >= GridSize * 1.5 + 1 && DragLocation.Height <= GridSize)
                 {
                     Canvas.SetTop(DragLocation, Canvas.GetTop(DragLocation) + GridSize);
-                    GlobalState.ResizeUp = false;
-                    GlobalState.ResizeDown = true;
+                    GlobalState.IsResizingUp = false;
+                    GlobalState.IsResizingDown = true;
                     DragStart.Y += GridSize * 2;
                 }
             }
-            else if (GlobalState.ResizeDown)
+            else if (GlobalState.IsResizingDown)
             {
                 while (temp.Y - DragStart.Y >= GridSize / 2 + 1)
                 {
@@ -194,8 +194,8 @@ namespace BoundMaker.Views
                 if (temp.Y - DragStart.Y <= -GridSize * 1.5 + 1 && DragLocation.Height <= GridSize)
                 {
                     Canvas.SetTop(DragLocation, Canvas.GetTop(DragLocation) - GridSize);
-                    GlobalState.ResizeUp = true;
-                    GlobalState.ResizeDown = false;
+                    GlobalState.IsResizingUp = true;
+                    GlobalState.IsResizingDown = false;
                     DragStart.Y -= GridSize * 2;
                 }
             }

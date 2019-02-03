@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:BoundMaker.Views"
         xmlns:panels="clr-namespace:BoundMaker.Views.Panels"
         MinHeight="620" Height="620" MaxHeight="620" MinWidth="751" Width="751" MaxWidth="751"
-        ResizeMode="NoResize" Icon="/Icons/mainicon.png" Closing="Window_Closing" PreviewKeyDown="WindowKeyDownEventHandler">
+        ResizeMode="NoResize" Icon="/Icons/mainicon.png" Closing="WindowClosingEventHandler" PreviewKeyDown="WindowKeyDownEventHandler">
     <Window.CommandBindings>
         <CommandBinding Command="New"
        CanExecute="NewCanExecute"
@@ -47,31 +47,31 @@
         
         <Menu x:Name="MainMenu" IsMainMenu="True">
             <MenuItem Header="_File">
-                <MenuItem x:Name="Menu_New" Header="_New" Command="New" InputGestureText="Ctrl+N">
+                <MenuItem Header="_New" Command="New" InputGestureText="Ctrl+N">
                     <MenuItem.Icon>
                         <Image Source="/Icons/new.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem x:Name="Menu_Open" Header="_Open" Command="Open" InputGestureText="Ctrl+O">
+                <MenuItem Header="_Open" Command="Open" InputGestureText="Ctrl+O">
                     <MenuItem.Icon>
                         <Image Source="/Icons/open.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem x:Name="Menu_Save" Header="_Save" Command="Save" InputGestureText="Ctrl+S">
+                <MenuItem Header="_Save" Command="Save" InputGestureText="Ctrl+S">
                     <MenuItem.Icon>
                         <Image Source="/Icons/save.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem x:Name="Menu_SaveAs" Header="Save _As" Command="SaveAs" InputGestureText="Ctrl+Shift+S">
+                <MenuItem Header="Save _As" Command="SaveAs" InputGestureText="Ctrl+Shift+S">
                     <MenuItem.Icon>
                         <Image Source="/Icons/saveas.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem x:Name="Menu_Close" Header="E_xit" Command="Close" InputGestureText="Alt+F4" />
+                <MenuItem Header="E_xit" Command="Close" InputGestureText="Alt+F4" />
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem x:Name="Menu_Help" Header="How To _Use" Command="Help" InputGestureText="F1" />
-                <MenuItem x:Name="Menu_About" Header="_About" Command="Properties" />
+                <MenuItem Header="How To _Use" Command="Help" InputGestureText="F1" />
+                <MenuItem Header="_About" Command="Properties" />
             </MenuItem>
         </Menu>
 
@@ -85,29 +85,29 @@
                 <Border BorderBrush="Gray" BorderThickness="1" DockPanel.Dock="Left">
                     <StackPanel>
                         <Label Content="Mode:" />
-                        <RadioButton x:Name="Mode_Terrain" GroupName="EditorMode" Content="Terrain" Margin="2" Checked="Mode_Terrain_Checked" />
-                        <RadioButton GroupName="EditorMode" Content="Location" Margin="2" Checked="Mode_Location_Checked" />
-                        <RadioButton GroupName="EditorMode" Content="Explosion" Margin="2" Checked="Mode_Explosion_Checked" />
+                        <RadioButton x:Name="TerrainMode" GroupName="EditorMode" Content="Terrain" Margin="2" Checked="SetToTerrainMode" />
+                        <RadioButton GroupName="EditorMode" Content="Location" Margin="2" Checked="SetToLocationMode" />
+                        <RadioButton GroupName="EditorMode" Content="Explosion" Margin="2" Checked="SetToExplosionMode" />
                     </StackPanel>
                 </Border>
 
                 <Border BorderBrush="LightGray" BorderThickness=".5" DockPanel.Dock="Right">
                     <StackPanel Margin="5">
-                        <CheckBox x:Name="Settings_Show_Grid" Content="Show Grid" IsChecked="True" Margin="5" Checked="GridVisibilityToggleEventHandler" Unchecked="GridVisibilityToggleEventHandler" />
-                        <CheckBox x:Name="Settings_Show_Locations" Content="Show Locations" IsChecked="True" Margin="5" Checked="LocationVisibilityToggleEventHandler" Unchecked="LocationVisibilityToggleEventHandler" IsEnabled="False" />
+                        <CheckBox x:Name="ShowGrid" Content="Show Grid" IsChecked="True" Margin="5" Checked="GridVisibilityToggleEventHandler" Unchecked="GridVisibilityToggleEventHandler" />
+                        <CheckBox x:Name="ShowLocations" Content="Show Locations" IsChecked="True" Margin="5" Checked="LocationVisibilityToggleEventHandler" Unchecked="LocationVisibilityToggleEventHandler" IsEnabled="False" />
                     </StackPanel>
                 </Border>
 
                 <Grid>
 
                     <Border BorderBrush="LightGray" BorderThickness="0.5">
-                        <panels:TerrainPanel x:Name="Panel_Terrain" />
+                        <panels:TerrainPanel x:Name="Terrain" />
                     </Border>
                     <Border BorderBrush="LightGray" BorderThickness="0.5">
-                        <panels:LocationPanel x:Name="Panel_Location" />
+                        <panels:LocationPanel x:Name="LocationPanel" />
                     </Border>
                     <Border BorderBrush="LightGray" BorderThickness="0.5">
-                        <panels:ExplosionPanel x:Name="Panel_Explosion" />
+                        <panels:ExplosionPanel x:Name="ExplosionPanel" />
                     </Border>
 
 
@@ -116,6 +116,6 @@
         </Grid>
 
         <local:CodeGenerator x:Name="CodeWindow" Grid.Row="1" Visibility="Hidden" Grid.RowSpan="1" />
-        <Button x:Name="Toggle_Code" Content="Switch to Code Generation Mode" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Margin="5" Click="CodeToggleEventHandler" />
+        <Button x:Name="ToggleCodeGenerationButton" Content="Switch to Code Generation Mode" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Margin="5" Click="CodeToggleEventHandler" />
     </Grid>
 </Window>

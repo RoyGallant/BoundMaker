@@ -35,15 +35,15 @@ namespace BoundMaker.Views.Panels
 
         public void ExplosionTypeChanged(object sender, RoutedEventArgs e)
         {
-            if (Panel_Explosion.Explosion_Unit_Terran.IsChecked == true)
+            if (TerranExplosion.IsChecked == true)
             {
                 GlobalState.ExplosionType = "terran";
             }
-            else if (Panel_Explosion.Explosion_Unit_Protoss.IsChecked == true)
+            else if (ProtossExplosion.IsChecked == true)
             {
                 GlobalState.ExplosionType = "protoss";
             }
-            else if (Panel_Explosion.Explosion_Unit_Zerg.IsChecked == true)
+            else if (ZergExplosion.IsChecked == true)
             {
                 GlobalState.ExplosionType = "zerg";
             }
@@ -52,8 +52,8 @@ namespace BoundMaker.Views.Panels
         #region Preview Animation
         private void SetWaitTime(object sender, TextChangedEventArgs e)
         {
-            string waitTime = Regex.Replace(Wait_Input.Text, "[^0-9]", "");
-            Wait_Input.Text = waitTime;
+            string waitTime = Regex.Replace(WaitInput.Text, "[^0-9]", "");
+            WaitInput.Text = waitTime;
             while (waitTime.StartsWith("0"))
             {
                 waitTime = waitTime.Substring(1);
@@ -64,33 +64,33 @@ namespace BoundMaker.Views.Panels
                 waitTime = "0";
             }
 
-            Wait_Counter_Display.Content = waitTime + " ms";
+            WaitCounterDisplay.Content = waitTime + " ms";
             CurrentSequence.WaitTime = int.Parse(waitTime);
-            GlobalState.ChangesMade = true;
+            GlobalState.HasMadeChanges = true;
             mainWindow.RefreshTitle();
         }
 
         public void SetWaitTime(int milliseconds)
         {
-            Wait_Input.Text = milliseconds.ToString();
-            Wait_Counter_Display.Content = milliseconds + " ms";
+            WaitInput.Text = milliseconds.ToString();
+            WaitCounterDisplay.Content = milliseconds + " ms";
         }
 
         public void PlayPauseSequenceEventHandler(object sender, RoutedEventArgs e)
         {
-            GlobalState.Playing = !GlobalState.Playing;
-            if (GlobalState.Playing)
+            GlobalState.IsPlaying = !GlobalState.IsPlaying;
+            if (GlobalState.IsPlaying)
             {
-                Explosion_Unit_Protoss.IsEnabled = false;
-                Explosion_Unit_Terran.IsEnabled = false;
-                Explosion_Unit_Zerg.IsEnabled = false;
-                Wait_Input.IsEnabled = false;
+                ProtossExplosion.IsEnabled = false;
+                TerranExplosion.IsEnabled = false;
+                ZergExplosion.IsEnabled = false;
+                WaitInput.IsEnabled = false;
                 UpdateNavigation();
-                mainWindow.Settings_Show_Locations.IsEnabled = true;
+                mainWindow.ShowLocations.IsEnabled = true;
                 mainWindow.LocationVisibilityToggleEventHandler(null, null);
                 sequenceTimer.Interval = 10;
                 sequenceTimer.Start();
-                Sequence_PlayPause.Content = "Stop";
+                PlayOrPauseSequence.Content = "Stop";
                 foreach (MapLocation loc in GlobalState.Locations)
                 {
                     loc.SetColor(MapLocation.ColorDefault);
@@ -98,11 +98,11 @@ namespace BoundMaker.Views.Panels
             }
             else
             {
-                Explosion_Unit_Protoss.IsEnabled = true;
-                Explosion_Unit_Terran.IsEnabled = true;
-                Explosion_Unit_Zerg.IsEnabled = true;
-                Wait_Input.IsEnabled = true;
-                mainWindow.Settings_Show_Locations.IsEnabled = false;
+                ProtossExplosion.IsEnabled = true;
+                TerranExplosion.IsEnabled = true;
+                ZergExplosion.IsEnabled = true;
+                WaitInput.IsEnabled = true;
+                mainWindow.ShowLocations.IsEnabled = false;
                 foreach (MapLocation loc in GlobalState.Locations)
                 {
                     loc.Visibility = Visibility.Visible;
@@ -110,7 +110,7 @@ namespace BoundMaker.Views.Panels
 
                 UpdateNavigation();
                 sequenceTimer.Stop();
-                Sequence_PlayPause.Content = "Play";
+                PlayOrPauseSequence.Content = "Play";
                 CurrentSequence.UpdateLocationColors();
             }
         }
@@ -141,7 +141,7 @@ namespace BoundMaker.Views.Panels
                     lapover += 36;
                 }
 
-                Sequence_Counter_Display.Content = "Sequence #" + (GlobalState.Sequences.IndexOf(CurrentSequence) + 1);
+                SequenceCounterDisplay.Content = "Sequence #" + (GlobalState.Sequences.IndexOf(CurrentSequence) + 1);
                 sequenceTimer.Interval = ((int)Math.Ceiling(CurrentSequence.WaitTime / 42.0)) * 42 + lapover;
                 if (CurrentSequence != GlobalState.Sequences.Last())
                 {
@@ -257,116 +257,130 @@ namespace BoundMaker.Views.Panels
                     CurrentSequence.UpdateLocationColors();
                 }
             }
-            GlobalState.ChangesMade = true;
+            GlobalState.HasMadeChanges = true;
             mainWindow.RefreshTitle();
             UpdateNavigation();
         }
 
         internal void SequenceNavigationKeyDownEventHandler(object sender, KeyEventArgs e)
         {
-            if (Wait_Input.IsFocused == false)
+            if (WaitInput.IsFocused == false)
             {
-                if (e.Key == Key.T)
+                switch (e.Key)
                 {
-                    Explosion_Unit_Terran.IsChecked = true;
-                }
-                else if (e.Key == Key.P)
-                {
-                    Explosion_Unit_Protoss.IsChecked = true;
-                }
-                else if (e.Key == Key.Z)
-                {
-                    Explosion_Unit_Zerg.IsChecked = true;
-                }
-                else if (e.Key == Key.OemPlus && SNav_Next.IsEnabled == true)
-                {
-                    SequenceNavigationNextButtonEventHandler(null, null);
-                }
-                else if (e.Key == Key.OemMinus && SNav_Previous.IsEnabled == true)
-                {
-                    SequenceNavigationPreviousButtonEventHandler(null, null);
-                }
-                else if (e.Key == Key.PageUp && SNav_First.IsEnabled == true)
-                {
-                    SequenceNavigationFirstButtonEventHandler(null, null);
-                }
-                else if (e.Key == Key.PageDown && SNav_Last.IsEnabled == true)
-                {
-                    SequenceNavigationLastButtonEventHandler(null, null);
-                }
-                else if (e.Key == Key.Delete && Sequence_Delete.IsEnabled == true)
-                {
-                    RemoveSequenceEventHandler(null, null);
-                }
-                else if (e.Key == Key.Insert && SNav_InsertBefore.IsEnabled == true)
-                {
-                    SequenceNavigationInsertButtonEventHandler(null, null);
+                    case Key.T:
+                        TerranExplosion.IsChecked = true;
+                        break;
+                    case Key.P:
+                        ProtossExplosion.IsChecked = true;
+                        break;
+                    case Key.Z:
+                        ZergExplosion.IsChecked = true;
+                        break;
+                    case Key.OemPlus:
+                        if (SequenceNavigationButtonNext.IsEnabled == true)
+                        {
+                            SequenceNavigationNextButtonEventHandler(null, null);
+                        }
+                        break;
+                    case Key.OemMinus:
+                        if (SequenceNavigationButtonPrevious.IsEnabled == true)
+                        {
+                            SequenceNavigationPreviousButtonEventHandler(null, null);
+                        }
+                        break;
+                    case Key.PageUp:
+                        if (SequenceNavigationButtonFirst.IsEnabled == true)
+                        {
+                            SequenceNavigationFirstButtonEventHandler(null, null);
+                        }
+                        break;
+                    case Key.PageDown:
+                        if (SequenceNavigationButtonLast.IsEnabled == true)
+                        {
+                            SequenceNavigationLastButtonEventHandler(null, null);
+                        }
+                        break;
+                    case Key.Delete:
+                        if (SequenceNavigationButtonDelete.IsEnabled == true)
+                        {
+                            RemoveSequenceEventHandler(null, null);
+                        }
+                        break;
+                    case Key.Insert:
+                        if (SequenceNavigationButtonInsert.IsEnabled == true)
+                        {
+                            SequenceNavigationInsertButtonEventHandler(null, null);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         }
 
         public void UpdateNavigation()
         {
-            if (GlobalState.Playing || GlobalState.Sequences.Count <= 0)
+            if (GlobalState.IsPlaying || GlobalState.Sequences.Count <= 0)
             {
-                SNav_First.IsEnabled = false;
-                SNav_Previous.IsEnabled = false;
-                SNav_InsertBefore.IsEnabled = false;
-                SNav_Next.IsEnabled = false;
-                SNav_Last.IsEnabled = false;
-                Sequence_Delete.IsEnabled = false;
+                SequenceNavigationButtonFirst.IsEnabled = false;
+                SequenceNavigationButtonPrevious.IsEnabled = false;
+                SequenceNavigationButtonInsert.IsEnabled = false;
+                SequenceNavigationButtonNext.IsEnabled = false;
+                SequenceNavigationButtonLast.IsEnabled = false;
+                SequenceNavigationButtonDelete.IsEnabled = false;
             }
             else
             {
                 if (CurrentSequence.IsBlank() && GlobalState.Sequences.Count <= 1)
                 {
-                    Sequence_Delete.IsEnabled = false;
+                    SequenceNavigationButtonDelete.IsEnabled = false;
                 }
                 else
                 {
-                    Sequence_Delete.IsEnabled = true;
+                    SequenceNavigationButtonDelete.IsEnabled = true;
                 }
 
                 if (CurrentSequence == GlobalState.Sequences.First())
                 {
-                    SNav_First.IsEnabled = false;
-                    SNav_Previous.IsEnabled = false;
+                    SequenceNavigationButtonFirst.IsEnabled = false;
+                    SequenceNavigationButtonPrevious.IsEnabled = false;
                 }
                 else
                 {
-                    SNav_First.IsEnabled = true;
-                    SNav_Previous.IsEnabled = true;
+                    SequenceNavigationButtonFirst.IsEnabled = true;
+                    SequenceNavigationButtonPrevious.IsEnabled = true;
                 }
 
                 if (CurrentSequence == GlobalState.Sequences.Last())
                 {
-                    SNav_Last.IsEnabled = false;
+                    SequenceNavigationButtonLast.IsEnabled = false;
                 }
                 else
                 {
-                    SNav_Last.IsEnabled = true;
+                    SequenceNavigationButtonLast.IsEnabled = true;
                 }
 
                 if (CurrentSequence.IsBlank() && CurrentSequence == GlobalState.Sequences.Last())
                 {
-                    SNav_Next.IsEnabled = false;
+                    SequenceNavigationButtonNext.IsEnabled = false;
                 }
                 else
                 {
-                    SNav_Next.IsEnabled = true;
+                    SequenceNavigationButtonNext.IsEnabled = true;
                 }
 
                 if (CurrentSequence.IsBlank())
                 {
-                    SNav_InsertBefore.IsEnabled = false;
+                    SequenceNavigationButtonInsert.IsEnabled = false;
                 }
                 else
                 {
-                    SNav_InsertBefore.IsEnabled = true;
+                    SequenceNavigationButtonInsert.IsEnabled = true;
                 }
 
-                Panel_Explosion.Sequence_Counter_Display.Content = "Sequence #" + (GlobalState.Sequences.IndexOf(CurrentSequence) + 1);
-                Panel_Explosion.SetWaitTime(CurrentSequence.WaitTime);
+                SequenceCounterDisplay.Content = "Sequence #" + (GlobalState.Sequences.IndexOf(CurrentSequence) + 1);
+                SetWaitTime(CurrentSequence.WaitTime);
                 CurrentSequence.UpdateLocations(GlobalState.Locations);
                 CurrentSequence.UpdateLocationColors();
             }

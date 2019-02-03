@@ -18,28 +18,28 @@ namespace BoundMaker.Views
 
         private void LineBreakTextChangedEventHandler(object sender, TextChangedEventArgs e)
         {
-            Line_Break.Text = Regex.Replace(Line_Break.Text, "[^0-9]", "");
-            if (Line_Break.Text.Length > 0)
+            LineBreakCount.Text = Regex.Replace(LineBreakCount.Text, "[^0-9]", "");
+            if (LineBreakCount.Text.Length > 0)
             {
-                int i = int.Parse(Line_Break.Text);
+                int i = int.Parse(LineBreakCount.Text);
                 if (i > 999)
                 {
-                    Line_Break.Text = "999";
+                    LineBreakCount.Text = "999";
                 }
             }
         }
 
         private void GenerateButtonClickedEventHandler(object sender, RoutedEventArgs e)
         {
-            if (CodeType_Scmdraft.IsChecked == true)
+            if (Scmdraft.IsChecked == true)
             {
                 GenerateTextTriggers(new ScmdraftTriggerGenerator());
             }
-            else if (CodeType_Starforge.IsChecked == true)
+            else if (Starforge.IsChecked == true)
             {
                 GenerateTextTriggers(new StarforgeTriggerGenerator());
             }
-            //else if (CodeType_SomeOtherEditor.IsChecked == true)
+            //else if (SomeOtherEditor.IsChecked == true)
             //{
             //    GenerateTextTriggers(new SomeOtherEditorTriggerGenerator());
             //}
@@ -49,13 +49,13 @@ namespace BoundMaker.Views
         {
             var triggers = new StringBuilder();
             int lineBreak;
-            if (Line_Break.Text.Length == 0 || int.Parse(Line_Break.Text) == 0)
+            if (LineBreakCount.Text.Length == 0 || int.Parse(LineBreakCount.Text) == 0)
             {
                 lineBreak = 9999999;
             }
             else
             {
-                lineBreak = int.Parse(Line_Break.Text);
+                lineBreak = int.Parse(LineBreakCount.Text);
             }
 
             var actions = new List<string>();
@@ -63,7 +63,7 @@ namespace BoundMaker.Views
             {
                 foreach (Models.MapLocation location in sequence.States.Keys.Where(x => sequence.States[x] != "default"))
                 {
-                    actions.Add(triggerGenerator.CreateUnit(Code_Unit_Owner.GetSelectionContent(), sequence.GetExplosionUnitName(location), location.LocationName));
+                    actions.Add(triggerGenerator.CreateUnit(Player.GetSelectionContent(), sequence.GetExplosionUnitName(location), location.LocationName));
                     actions.Add(triggerGenerator.KillUnit(location.LocationName));
                 }
                 actions.Add(triggerGenerator.Wait(sequence.WaitTime));
@@ -74,7 +74,7 @@ namespace BoundMaker.Views
                 triggers.AppendLine(actions[i - 1]);
                 if (i % lineBreak == 0)
                 {
-                    if (Add_Preserve.IsChecked == true)
+                    if (AddPreserveTriggerOnLineBreaks.IsChecked == true)
                     {
                         triggers.AppendLine(triggerGenerator.PreserveTrigger());
                     }
@@ -82,12 +82,12 @@ namespace BoundMaker.Views
                     triggers.AppendLine();
                 }
             }
-            if (Add_Preserve.IsChecked == true && (lineBreak > actions.Count || lineBreak % actions.Count != 0))
+            if (AddPreserveTriggerOnLineBreaks.IsChecked == true && (lineBreak > actions.Count || lineBreak % actions.Count != 0))
             {
                 triggers.AppendLine(triggerGenerator.PreserveTrigger());
             }
 
-            Code_Output.Text = triggers.ToString();
+            TriggerOutput.Text = triggers.ToString();
         }
     }
 }

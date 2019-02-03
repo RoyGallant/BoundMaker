@@ -14,21 +14,21 @@ namespace BoundMaker.Views.Panels
 
         private void TerrainSizeChanged(object sender, RoutedEventArgs e)
         {
-            if (Tile_Size_1x1.IsChecked == true)
+            if (TileSize1x1.IsChecked == true)
             {
                 GlobalState.TerrainPlacementSize = 1;
             }
-            else if (Tile_Size_2x2.IsChecked == true)
+            else if (TileSize2x2.IsChecked == true)
             {
                 GlobalState.TerrainPlacementSize = 2;
             }
-            else if (Tile_Size_3x3.IsChecked == true)
+            else if (TileSize3x3.IsChecked == true)
             {
                 GlobalState.TerrainPlacementSize = 3;
             }
         }
 
-        private void Tile_MouseEnter(object sender, MouseEventArgs e)
+        private void MouseEnterEventHandler(object sender, MouseEventArgs e)
         {
             var tile = sender as Label;
             if (tile != GlobalState.SelectedTile)
@@ -41,7 +41,7 @@ namespace BoundMaker.Views.Panels
 
         }
 
-        private void Tile_MouseLeave(object sender, MouseEventArgs e)
+        private void MouseLeaveEventHandler(object sender, MouseEventArgs e)
         {
             var tile = sender as Label;
             if (tile != GlobalState.SelectedTile)
@@ -53,7 +53,7 @@ namespace BoundMaker.Views.Panels
             }
         }
 
-        private void Tile_MouseDown(object sender, MouseEventArgs e)
+        private void MouseDownEventHandler(object sender, MouseEventArgs e)
         {
             var tile = sender as Label;
             var border = tile.Content as Border;

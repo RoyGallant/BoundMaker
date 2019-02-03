@@ -85,7 +85,7 @@ namespace BoundMaker.Views
             {
                 TileImage.Source = NullTile;
             }
-            GlobalState.ChangesMade = true;
+            GlobalState.HasMadeChanges = true;
             if (mainWindow != null)
             {
                 mainWindow.RefreshTitle();
@@ -101,9 +101,9 @@ namespace BoundMaker.Views
 
         private void MouseEnterEventHandler(object sender, MouseEventArgs e)
         {
-            if (!GlobalState.DraggingLocation && !GlobalState.ResizingLocation)
+            if (!GlobalState.IsDraggingLocation && !GlobalState.IsResizingLocation)
             {
-                if (GlobalState.Mode_Location && !GlobalState.Playing)
+                if (GlobalState.LocationPanelIsActive && !GlobalState.IsPlaying)
                 {
                     if (e.LeftButton == MouseButtonState.Pressed)
                     {
@@ -159,19 +159,19 @@ namespace BoundMaker.Views
 
         private void MouseLeftButtonDownEventHandler(object sender, MouseButtonEventArgs e)
         {
-            if (!GlobalState.DraggingLocation && !GlobalState.ResizingLocation)
+            if (!GlobalState.IsDraggingLocation && !GlobalState.IsResizingLocation)
             {
-                if (GlobalState.Mode_Terrain)
+                if (GlobalState.TerrainPanelIsActive)
                 {
                     if (e.LeftButton == MouseButtonState.Pressed)
                     {
                         foreach (UIElement tile in HighlightTerrainCells(mainWindow.MapTerrain, this, e))
                         {
-                            ((MapTerrainTile)tile).SetTerrain(SelectedTileType());
+                            ((MapTerrainTile)tile).SetTerrain(SelectedTileType);
                         }
                     }
                 }
-                else if (GlobalState.Mode_Location && !GlobalState.Playing)
+                else if (GlobalState.LocationPanelIsActive && !GlobalState.IsPlaying)
                 {
                     LocationPreview();
                     foreach (MapLocation m in GlobalState.Locations)
@@ -185,13 +185,13 @@ namespace BoundMaker.Views
 
         private void MouseLeftButtonUpEventHandler(object sender, MouseButtonEventArgs e)
         {
-            if (!GlobalState.DraggingLocation && !GlobalState.ResizingLocation)
+            if (!GlobalState.IsDraggingLocation && !GlobalState.IsResizingLocation)
             {
-                if (GlobalState.Mode_Terrain)
+                if (GlobalState.TerrainPanelIsActive)
                 {
                     SetHighlight(true);
                 }
-                else if (GlobalState.Mode_Location && !GlobalState.Playing)
+                else if (GlobalState.LocationPanelIsActive && !GlobalState.IsPlaying)
                 {
                     var temp = new Point(Grid.GetColumn(this), Grid.GetRow(this));
                     List<UIElement> tiles = LocationHighlightCells(mainWindow.MapTerrain, GlobalState.LocationStart, temp);
@@ -199,13 +199,13 @@ namespace BoundMaker.Views
                     mainWindow.MapCanvas.Children.Add(m);
                     m.SetWindowInstance(mainWindow);
                     GlobalState.Locations.Add(m);
-                    mainWindow.Panel_Location.SetLocationNames();
+                    mainWindow.LocationPanel.SetLocationNames();
                     foreach (MapLocation m1 in GlobalState.Locations)
                     {
                         m1.IsHitTestVisible = true;
                     }
 
-                    GlobalState.ChangesMade = true;
+                    GlobalState.HasMadeChanges = true;
                     mainWindow.RefreshTitle();
                     mainWindow.MapTerrain.RefreshGrid();
                 }
@@ -215,9 +215,9 @@ namespace BoundMaker.Views
         private void MouseRightButtonDownEventHandler(object sender, MouseButtonEventArgs e)
         {
 
-            if (!GlobalState.DraggingLocation && !GlobalState.ResizingLocation)
+            if (!GlobalState.IsDraggingLocation && !GlobalState.IsResizingLocation)
             {
-                if (GlobalState.Mode_Terrain)
+                if (GlobalState.TerrainPanelIsActive)
                 {
                     if (e.RightButton == MouseButtonState.Pressed)
                     {
@@ -227,7 +227,7 @@ namespace BoundMaker.Views
                         }
                     }
                 }
-                else if (GlobalState.Mode_Location)
+                else if (GlobalState.LocationPanelIsActive)
                 {
                     Highlighted = false;
                 }
@@ -236,23 +236,23 @@ namespace BoundMaker.Views
 
         private void MouseRightButtonUpEventHandler(object sender, MouseButtonEventArgs e)
         {
-            if (!GlobalState.DraggingLocation)
+            if (!GlobalState.IsDraggingLocation)
             {
                 SetHighlight(true);
             }
-            GlobalState.ChangesMade = true;
+            GlobalState.HasMadeChanges = true;
             mainWindow.RefreshTitle();
         }
 
         private void MouseMoveEventHandler(object sender, MouseEventArgs e)
         {
-            if (GlobalState.Mode_Terrain)
+            if (GlobalState.TerrainPanelIsActive)
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     foreach (UIElement tile in HighlightTerrainCells(mainWindow.MapTerrain, this, e))
                     {
-                        ((MapTerrainTile)tile).SetTerrain(SelectedTileType());
+                        ((MapTerrainTile)tile).SetTerrain(SelectedTileType);
                     }
                 }
                 else if (e.RightButton == MouseButtonState.Pressed)
@@ -308,15 +308,6 @@ namespace BoundMaker.Views
             return elements.Distinct();
         }
 
-        private static string SelectedTileType()
-        {
-            string s = null;
-            if (GlobalState.SelectedTile != null)
-            {
-                s = GlobalState.SelectedTile.Name.Substring("Tile_".Length).ToLower();
-            }
-
-            return s;
-        }
+        private static string SelectedTileType => GlobalState.SelectedTile?.Name.Substring("Tile".Length).ToLower();
     }
 }

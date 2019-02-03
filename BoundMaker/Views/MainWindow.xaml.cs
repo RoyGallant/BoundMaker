@@ -25,7 +25,7 @@ namespace BoundMaker.Views
         private string fullFilePath = "";
 
         private readonly string Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-        private static string UnsavedIndicator => GlobalState.ChangesMade ? "*" : null;
+        private static string UnsavedIndicator => GlobalState.HasMadeChanges ? "*" : null;
 
         public MainWindow()
         {
@@ -36,11 +36,11 @@ namespace BoundMaker.Views
             {
                 tile.SetWindowInstance(this);
             }
-            GlobalState.SelectedTile = Panel_Terrain.Tile_Dirt;
-            Panel_Explosion.CurrentSequence = new BoundSequence(GlobalState.Locations);
-            GlobalState.Sequences.Add(Panel_Explosion.CurrentSequence);
-            Panel_Explosion.SetWindowInstance(this);
-            Mode_Terrain.IsChecked = true;
+            GlobalState.SelectedTile = Terrain.TileDirt;
+            ExplosionPanel.CurrentSequence = new BoundSequence(GlobalState.Locations);
+            GlobalState.Sequences.Add(ExplosionPanel.CurrentSequence);
+            ExplosionPanel.SetWindowInstance(this);
+            TerrainMode.IsChecked = true;
             RefreshTitle();
         }
 
@@ -49,7 +49,7 @@ namespace BoundMaker.Views
             Title = $"Bound Maker v{Version} - {currentFileName}{UnsavedIndicator}";
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
         {
             CloseExecuted(null, null);
         }
@@ -63,11 +63,11 @@ namespace BoundMaker.Views
 
         private void NewExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            if (GlobalState.Playing)
+            if (GlobalState.IsPlaying)
             {
-                Panel_Explosion.PlayPauseSequenceEventHandler(null, null);
+                ExplosionPanel.PlayPauseSequenceEventHandler(null, null);
             }
-            if (e != null && GlobalState.ChangesMade && MessageBox.Show($"Do you want save changes to {currentFileName}?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (e != null && GlobalState.HasMadeChanges && MessageBox.Show($"Do you want save changes to {currentFileName}?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 if (fileExists)
                 {
@@ -91,13 +91,13 @@ namespace BoundMaker.Views
             {
                 new BoundSequence()
             };
-            Panel_Explosion.CurrentSequence = GlobalState.Sequences[0];
-            Panel_Explosion.UpdateNavigation();
+            ExplosionPanel.CurrentSequence = GlobalState.Sequences[0];
+            ExplosionPanel.UpdateNavigation();
             if (e != null)
             {
                 currentFileName = "Untitled.xml";
                 fileExists = false;
-                GlobalState.ChangesMade = false;
+                GlobalState.HasMadeChanges = false;
                 RefreshTitle();
             }
         }
@@ -110,12 +110,12 @@ namespace BoundMaker.Views
 
         private void OpenExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            if (GlobalState.Playing)
+            if (GlobalState.IsPlaying)
             {
-                Panel_Explosion.PlayPauseSequenceEventHandler(null, null);
+                ExplosionPanel.PlayPauseSequenceEventHandler(null, null);
             }
 
-            if (GlobalState.ChangesMade && MessageBox.Show($"Do you want save changes to {currentFileName}?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (GlobalState.HasMadeChanges && MessageBox.Show($"Do you want save changes to {currentFileName}?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 if (fileExists)
                 {
@@ -152,29 +152,29 @@ namespace BoundMaker.Views
                         MapEditor.MapCanvas.Children.Add(m);
                         m.SetWindowInstance(this);
                     }
-                    Panel_Location.SetLocationNames();
+                    LocationPanel.SetLocationNames();
                     if (GlobalState.Sequences.Count == 0)
                     {
                         GlobalState.Sequences.Add(new BoundSequence());
                     }
-                    Panel_Explosion.CurrentSequence = GlobalState.Sequences[0];
-                    Panel_Explosion.UpdateNavigation();
-                    if (GlobalState.Mode_Terrain)
+                    ExplosionPanel.CurrentSequence = GlobalState.Sequences[0];
+                    ExplosionPanel.UpdateNavigation();
+                    if (GlobalState.TerrainPanelIsActive)
                     {
-                        Mode_Terrain_Checked(null, null);
+                        SetToTerrainMode(null, null);
                     }
-                    else if (GlobalState.Mode_Location)
+                    else if (GlobalState.LocationPanelIsActive)
                     {
-                        Mode_Location_Checked(null, null);
+                        SetToLocationMode(null, null);
                     }
-                    else if (GlobalState.Mode_Explosion)
+                    else if (GlobalState.ExplosionPanelIsActive)
                     {
-                        Mode_Explosion_Checked(null, null);
+                        SetToExplosionMode(null, null);
                     }
                     currentFileName = dialog.SafeFileName;
                     fullFilePath = dialog.FileName;
                     fileExists = true;
-                    GlobalState.ChangesMade = false;
+                    GlobalState.HasMadeChanges = false;
                     RefreshTitle();
                 }
                 catch
@@ -197,9 +197,9 @@ namespace BoundMaker.Views
         {
             if (fileExists)
             {
-                if (GlobalState.Playing)
+                if (GlobalState.IsPlaying)
                 {
-                    Panel_Explosion.PlayPauseSequenceEventHandler(null, null);
+                    ExplosionPanel.PlayPauseSequenceEventHandler(null, null);
                 }
 
                 try
@@ -207,7 +207,7 @@ namespace BoundMaker.Views
                     var fileData = new BoundMakerFile { Locations = GlobalState.Locations, Tiles = MapEditor.MapTerrain.GetTiles(), Sequences = GlobalState.Sequences };
                     XmlHandler.WriteXmlDocument(fullFilePath, fileData);
                     fileExists = true;
-                    GlobalState.ChangesMade = false;
+                    GlobalState.HasMadeChanges = false;
                     RefreshTitle();
                 }
                 catch
@@ -229,9 +229,9 @@ namespace BoundMaker.Views
 
         private void SaveAsExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            if (GlobalState.Playing)
+            if (GlobalState.IsPlaying)
             {
-                Panel_Explosion.PlayPauseSequenceEventHandler(null, null);
+                ExplosionPanel.PlayPauseSequenceEventHandler(null, null);
             }
 
             var dlg = new Microsoft.Win32.SaveFileDialog
@@ -250,7 +250,7 @@ namespace BoundMaker.Views
                     currentFileName = dlg.SafeFileName;
                     fullFilePath = dlg.FileName;
                     fileExists = true;
-                    GlobalState.ChangesMade = false;
+                    GlobalState.HasMadeChanges = false;
                     RefreshTitle();
                 }
                 catch
@@ -268,7 +268,7 @@ namespace BoundMaker.Views
 
         private void CloseExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            if (GlobalState.ChangesMade && MessageBox.Show($"Do you want save changes to {currentFileName}?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (GlobalState.HasMadeChanges && MessageBox.Show($"Do you want save changes to {currentFileName}?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 if (fileExists)
                 {
@@ -328,14 +328,14 @@ namespace BoundMaker.Views
         #endregion
 
         #region Mode Toggles
-        private void Mode_Explosion_Checked(object sender, RoutedEventArgs e)
+        private void SetToExplosionMode(object sender, RoutedEventArgs e)
         {
-            GlobalState.Mode_Explosion = true;
-            GlobalState.Mode_Location = false;
-            GlobalState.Mode_Terrain = false;
-            Panel_Terrain.Visibility = Visibility.Hidden;
-            Panel_Location.Visibility = Visibility.Hidden;
-            Panel_Explosion.Visibility = Visibility.Visible;
+            GlobalState.ExplosionPanelIsActive = true;
+            GlobalState.LocationPanelIsActive = false;
+            GlobalState.TerrainPanelIsActive = false;
+            Terrain.Visibility = Visibility.Hidden;
+            LocationPanel.Visibility = Visibility.Hidden;
+            ExplosionPanel.Visibility = Visibility.Visible;
             foreach (MapTerrainTile t in MapEditor.MapTerrain.GetTiles())
             {
                 t.IsHitTestVisible = false;
@@ -343,32 +343,32 @@ namespace BoundMaker.Views
             foreach (MapLocation m in GlobalState.Locations)
             {
                 m.IsHitTestVisible = true;
-                if (Settings_Show_Locations.IsChecked == true || !GlobalState.Playing)
+                if (ShowLocations.IsChecked == true || !GlobalState.IsPlaying)
                 {
                     m.Visibility = Visibility.Visible;
                 }
             }
-            if (!GlobalState.Playing)
+            if (!GlobalState.IsPlaying)
             {
-                Panel_Explosion.CurrentSequence.UpdateLocationColors();
+                ExplosionPanel.CurrentSequence.UpdateLocationColors();
             }
         }
 
-        private void Mode_Terrain_Checked(object sender, RoutedEventArgs e)
+        private void SetToTerrainMode(object sender, RoutedEventArgs e)
         {
-            GlobalState.Mode_Explosion = false;
-            GlobalState.Mode_Location = false;
-            GlobalState.Mode_Terrain = true;
-            Panel_Terrain.Visibility = Visibility.Visible;
-            Panel_Location.Visibility = Visibility.Hidden;
-            Panel_Explosion.Visibility = Visibility.Hidden;
+            GlobalState.ExplosionPanelIsActive = false;
+            GlobalState.LocationPanelIsActive = false;
+            GlobalState.TerrainPanelIsActive = true;
+            Terrain.Visibility = Visibility.Visible;
+            LocationPanel.Visibility = Visibility.Hidden;
+            ExplosionPanel.Visibility = Visibility.Hidden;
             foreach (MapTerrainTile t in MapEditor.MapTerrain.GetTiles())
             {
                 t.IsHitTestVisible = true;
             }
             foreach (MapLocation m in GlobalState.Locations)
             {
-                if (!GlobalState.Playing)
+                if (!GlobalState.IsPlaying)
                 {
                     m.Visibility = Visibility.Hidden;
                 }
@@ -377,14 +377,14 @@ namespace BoundMaker.Views
             }
         }
 
-        private void Mode_Location_Checked(object sender, RoutedEventArgs e)
+        private void SetToLocationMode(object sender, RoutedEventArgs e)
         {
-            GlobalState.Mode_Explosion = false;
-            GlobalState.Mode_Location = true;
-            GlobalState.Mode_Terrain = false;
-            Panel_Terrain.Visibility = Visibility.Hidden;
-            Panel_Location.Visibility = Visibility.Visible;
-            Panel_Explosion.Visibility = Visibility.Hidden;
+            GlobalState.ExplosionPanelIsActive = false;
+            GlobalState.LocationPanelIsActive = true;
+            GlobalState.TerrainPanelIsActive = false;
+            Terrain.Visibility = Visibility.Hidden;
+            LocationPanel.Visibility = Visibility.Visible;
+            ExplosionPanel.Visibility = Visibility.Hidden;
             foreach (MapTerrainTile t in MapEditor.MapTerrain.GetTiles())
             {
                 t.IsHitTestVisible = true;
@@ -393,7 +393,7 @@ namespace BoundMaker.Views
             {
                 m.SetColor(MapLocation.ColorDefault);
                 m.IsHitTestVisible = true;
-                if (Settings_Show_Locations.IsChecked == true || !GlobalState.Playing)
+                if (ShowLocations.IsChecked == true || !GlobalState.IsPlaying)
                 {
                     m.Visibility = Visibility.Visible;
                 }
@@ -422,9 +422,9 @@ namespace BoundMaker.Views
 
         public void LocationVisibilityToggleEventHandler(object sender, RoutedEventArgs e)
         {
-            if (GlobalState.Playing)
+            if (GlobalState.IsPlaying)
             {
-                if (Settings_Show_Locations.IsChecked == false)
+                if (ShowLocations.IsChecked == false)
                 {
                     foreach (MapLocation loc in GlobalState.Locations)
                     {
@@ -444,9 +444,9 @@ namespace BoundMaker.Views
 
         private void WindowKeyDownEventHandler(object sender, KeyEventArgs e)
         {
-            if (GlobalState.Mode_Explosion)
+            if (GlobalState.ExplosionPanelIsActive)
             {
-                Panel_Explosion.SequenceNavigationKeyDownEventHandler(sender, e);
+                ExplosionPanel.SequenceNavigationKeyDownEventHandler(sender, e);
             }
         }
 
@@ -455,20 +455,20 @@ namespace BoundMaker.Views
             viewCode = !viewCode;
             if (viewCode)
             {
-                if (GlobalState.Playing)
+                if (GlobalState.IsPlaying)
                 {
-                    Panel_Explosion.PlayPauseSequenceEventHandler(null, null);
+                    ExplosionPanel.PlayPauseSequenceEventHandler(null, null);
                 }
                 MapWindow.Visibility = Visibility.Hidden;
                 CodeWindow.Visibility = Visibility.Visible;
-                Toggle_Code.Content = "Switch to Editor Mode";
+                ToggleCodeGenerationButton.Content = "Switch to Editor Mode";
             }
             else
             {
                 MapWindow.Visibility = Visibility.Visible;
                 CodeWindow.Visibility = Visibility.Hidden;
-                Toggle_Code.Content = "Switch to Code Generation Mode";
-                CodeWindow.Code_Output.Text = "Trigger output will go here.";
+                ToggleCodeGenerationButton.Content = "Switch to Code Generation Mode";
+                CodeWindow.TriggerOutput.Text = "Trigger output will go here.";
             }
         }
     }

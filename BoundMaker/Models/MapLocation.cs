@@ -124,11 +124,11 @@ namespace BoundMaker.Models
         {
             if (!(sender is MapLocation location)) return;
 
-            if (GlobalState.Mode_Explosion && !GlobalState.Playing)
+            if (GlobalState.ExplosionPanelIsActive && !GlobalState.IsPlaying)
             {
                 location.SetHighlight(true);
             }
-            else if (!GlobalState.DraggingLocation && !GlobalState.ResizingLocation)
+            else if (!GlobalState.IsDraggingLocation && !GlobalState.IsResizingLocation)
             {
                 location.SetHighlight(true);
             }
@@ -138,18 +138,18 @@ namespace BoundMaker.Models
         {
             if (!(sender is MapLocation location)) return;
 
-            if (GlobalState.Mode_Explosion)
+            if (GlobalState.ExplosionPanelIsActive)
             {
                 location.SetHighlight(false);
             }
             else
             {
-                if (!GlobalState.ResizingLocation)
+                if (!GlobalState.IsResizingLocation)
                 {
                     Cursor = Cursors.Arrow;
                 }
 
-                if (!GlobalState.DraggingLocation)
+                if (!GlobalState.IsDraggingLocation)
                 {
                     location.SetHighlight(false);
                 }
@@ -160,29 +160,29 @@ namespace BoundMaker.Models
         {
             if (!(sender is MapLocation location)) return;
 
-            if (GlobalState.Mode_Explosion && !GlobalState.Playing)
+            if (GlobalState.ExplosionPanelIsActive && !GlobalState.IsPlaying)
             {
-                mainWindow.Panel_Explosion.CurrentSequence.SetLocationState(location, GlobalState.ExplosionType);
-                mainWindow.Panel_Explosion.UpdateNavigation();
+                mainWindow.ExplosionPanel.CurrentSequence.SetLocationState(location, GlobalState.ExplosionType);
+                mainWindow.ExplosionPanel.UpdateNavigation();
             }
             else
             {
-                if (location.EdgeSelected(e) && GlobalState.Mode_Location)
+                if (location.EdgeSelected(e) && GlobalState.LocationPanelIsActive)
                 {
-                    GlobalState.ResizingLocation = true;
-                    GlobalState.DraggingLocation = false;
+                    GlobalState.IsResizingLocation = true;
+                    GlobalState.IsDraggingLocation = false;
                     mainWindow.MapEditor.DragLocation = location;
                     mainWindow.MapEditor.DragStart = e.GetPosition(mainWindow.MapCanvas);
                 }
                 else
                 {
                     mainWindow.MapEditor.DragLocation = location;
-                    GlobalState.DraggingLocation = true;
-                    GlobalState.ResizingLocation = false;
+                    GlobalState.IsDraggingLocation = true;
+                    GlobalState.IsResizingLocation = false;
                     mainWindow.MapEditor.DragStart = mainWindow.MapEditor.DragLocation.Center;
                 }
             }
-            GlobalState.ChangesMade = true;
+            GlobalState.HasMadeChanges = true;
             mainWindow.RefreshTitle();
         }
 
@@ -193,8 +193,8 @@ namespace BoundMaker.Models
             {
                 seq.UpdateLocations(GlobalState.Locations);
             }
-            GlobalState.DraggingLocation = false;
-            GlobalState.ResizingLocation = false;
+            GlobalState.IsDraggingLocation = false;
+            GlobalState.IsResizingLocation = false;
         }
 
         private void MouseRightButtonDownEventHandler(object sender, MouseButtonEventArgs e)
@@ -203,32 +203,32 @@ namespace BoundMaker.Models
 
         private void MouseRightButtonUpEventHandler(object sender, MouseButtonEventArgs e)
         {
-            if (GlobalState.Mode_Explosion && !GlobalState.Playing)
+            if (GlobalState.ExplosionPanelIsActive && !GlobalState.IsPlaying)
             {
-                mainWindow.Panel_Explosion.CurrentSequence.SetLocationState(this, "default");
-                mainWindow.Panel_Explosion.UpdateNavigation();
+                mainWindow.ExplosionPanel.CurrentSequence.SetLocationState(this, "default");
+                mainWindow.ExplosionPanel.UpdateNavigation();
             }
-            else if (!GlobalState.DraggingLocation && !GlobalState.Playing)
+            else if (!GlobalState.IsDraggingLocation && !GlobalState.IsPlaying)
             {
                 GlobalState.Locations.Remove(this);
                 mainWindow.MapCanvas.Children.Remove(this);
-                mainWindow.Panel_Location.SetLocationNames();
+                mainWindow.LocationPanel.SetLocationNames();
                 foreach (BoundSequence item in GlobalState.Sequences)
                 {
                     item.UpdateLocations(GlobalState.Locations);
                 }
             }
-            GlobalState.ChangesMade = true;
+            GlobalState.HasMadeChanges = true;
             mainWindow.RefreshTitle();
         }
 
         public void MouseMoveEventHandler(object sender, MouseEventArgs e)
         {
-            if (GlobalState.DraggingLocation)
+            if (GlobalState.IsDraggingLocation)
             {
                 mainWindow.MapEditor.DragEventHandler(e);
             }
-            else if (GlobalState.ResizingLocation)
+            else if (GlobalState.IsResizingLocation)
             {
                 mainWindow.MapEditor.ResizeEventHandler(e);
             }
@@ -253,30 +253,30 @@ namespace BoundMaker.Models
                 loc.SetHighlight(false);
             }
             location.SetHighlight(true);
-            if (GlobalState.Mode_Location)
+            if (GlobalState.LocationPanelIsActive)
             {
-                GlobalState.ResizeLeft = location.EdgeSelectedLeft(e);
-                GlobalState.ResizeRight = location.EdgeSelectedRight(e);
-                GlobalState.ResizeUp = location.EdgeSelectedUp(e);
-                GlobalState.ResizeDown = location.EdgeSelectedDown(e);
-                if (GlobalState.ResizeLeft || GlobalState.ResizeRight || GlobalState.ResizeUp || GlobalState.ResizeDown)
+                GlobalState.IsResizingLeft = location.EdgeSelectedLeft(e);
+                GlobalState.IsResizingRight = location.EdgeSelectedRight(e);
+                GlobalState.IsResizingUp = location.EdgeSelectedUp(e);
+                GlobalState.IsResizingDown = location.EdgeSelectedDown(e);
+                if (GlobalState.IsResizingLeft || GlobalState.IsResizingRight || GlobalState.IsResizingUp || GlobalState.IsResizingDown)
                 {
-                    if ((GlobalState.ResizeLeft && GlobalState.ResizeUp) || (GlobalState.ResizeRight && GlobalState.ResizeDown))
+                    if ((GlobalState.IsResizingLeft && GlobalState.IsResizingUp) || (GlobalState.IsResizingRight && GlobalState.IsResizingDown))
                     {
                         // Top Left or Bottom Right
                         Cursor = Cursors.SizeNWSE;
                     }
-                    else if ((GlobalState.ResizeRight && GlobalState.ResizeUp) || (GlobalState.ResizeLeft && GlobalState.ResizeDown))
+                    else if ((GlobalState.IsResizingRight && GlobalState.IsResizingUp) || (GlobalState.IsResizingLeft && GlobalState.IsResizingDown))
                     {
                         // Top Right or Bottom Left
                         Cursor = Cursors.SizeNESW;
                     }
-                    else if (GlobalState.ResizeLeft || GlobalState.ResizeRight)
+                    else if (GlobalState.IsResizingLeft || GlobalState.IsResizingRight)
                     {
                         // Left or Right
                         Cursor = Cursors.SizeWE;
                     }
-                    else if (GlobalState.ResizeUp || GlobalState.ResizeDown)
+                    else if (GlobalState.IsResizingUp || GlobalState.IsResizingDown)
                     {
                         // Top or Bottom
                         Cursor = Cursors.SizeNS;
