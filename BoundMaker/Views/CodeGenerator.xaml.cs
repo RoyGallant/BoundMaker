@@ -39,6 +39,10 @@ namespace BoundMaker.Views
             {
                 GenerateTextTriggers(new StarforgeTriggerGenerator());
             }
+            else if (TrigEdit.IsChecked == true)
+            {
+                GenerateTextTriggers(new TrigEditTriggerGenerator());
+            }
             //else if (SomeOtherEditor.IsChecked == true)
             //{
             //    GenerateTextTriggers(new SomeOtherEditorTriggerGenerator());
