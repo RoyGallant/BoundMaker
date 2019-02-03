@@ -7,7 +7,7 @@
     <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Top" Margin="5">
         <Border BorderBrush="Gray" BorderThickness="1" DockPanel.Dock="Left">
             <StackPanel>
-                <RadioButton x:Name="Scmdraft" GroupName="Code" Content="SCMDraft 2" Margin="2" IsChecked="True" />
+                <RadioButton x:Name="Scmdraft" GroupName="Code" Content="ScmDraft 2" Margin="2" IsChecked="True" />
                 <RadioButton x:Name="Starforge" GroupName="Code" Content="Starforge" Margin="2" />
                 <RadioButton x:Name="TrigEdit" GroupName="Code" Content="TrigEdit++" Margin="2" />
                 <!--<RadioButton x:Name="SomeOtherEditor" GroupName="Code" Content="Some Other" Margin="2" />-->
