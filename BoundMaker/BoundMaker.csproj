@@ -109,7 +109,7 @@
     <Compile Include="Views\Panels\TerrainPanel.xaml.cs">
       <DependentUpon>TerrainPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserSelection.cs" />
+    <Compile Include="GlobalState.cs" />
     <Compile Include="Services\XmlHandler.cs" />
     <Page Include="Views\CodeGenerator.xaml">
       <SubType>Designer</SubType>
