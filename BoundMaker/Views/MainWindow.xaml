@@ -1,0 +1,121 @@
+﻿<Window x:Class="BoundMaker.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:BoundMaker.Views"
+        xmlns:panels="clr-namespace:BoundMaker.Views.Panels"
+        MinHeight="620" Height="620" MaxHeight="620" MinWidth="751" Width="751" MaxWidth="751"
+        ResizeMode="NoResize" Icon="/Icons/mainicon.png" Closing="Window_Closing" PreviewKeyDown="WindowKeyDownEventHandler">
+    <Window.CommandBindings>
+        <CommandBinding Command="New"
+       CanExecute="NewCanExecute"
+       Executed="NewExecuted" />
+        <CommandBinding Command="Open"
+       CanExecute="OpenCanExecute"
+       Executed="OpenExecuted" />
+        <CommandBinding Command="Save"
+       CanExecute="SaveCanExecute"
+       Executed="SaveExecuted" />
+        <CommandBinding Command="SaveAs"
+       CanExecute="SaveAsCanExecute"
+       Executed="SaveAsExecuted" />
+        <CommandBinding Command="Close"
+       CanExecute="CloseCanExecute"
+       Executed="CloseExecuted" />
+        <CommandBinding Command="Help"
+       CanExecute="HelpCanExecute"
+       Executed="HelpExecuted" />
+        <CommandBinding Command="Properties"
+       CanExecute="AboutCanExecute"
+       Executed="AboutExecuted" />
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Command="New" Key="N" Modifiers="Ctrl"/>
+        <KeyBinding Command="Open" Key="O" Modifiers="Ctrl"/>
+        <KeyBinding Command="Save" Key="S" Modifiers="Ctrl"/>
+        <KeyBinding Command="SaveAs" Key="S" Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="Close" Key="F4" Modifiers="Alt"/>
+        <KeyBinding Command="Help" Key="F1"/>
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" />
+            <RowDefinition Height="530" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        
+        <Menu x:Name="MainMenu" IsMainMenu="True">
+            <MenuItem Header="_File">
+                <MenuItem x:Name="Menu_New" Header="_New" Command="New" InputGestureText="Ctrl+N">
+                    <MenuItem.Icon>
+                        <Image Source="/Icons/new.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="Menu_Open" Header="_Open" Command="Open" InputGestureText="Ctrl+O">
+                    <MenuItem.Icon>
+                        <Image Source="/Icons/open.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="Menu_Save" Header="_Save" Command="Save" InputGestureText="Ctrl+S">
+                    <MenuItem.Icon>
+                        <Image Source="/Icons/save.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="Menu_SaveAs" Header="Save _As" Command="SaveAs" InputGestureText="Ctrl+Shift+S">
+                    <MenuItem.Icon>
+                        <Image Source="/Icons/saveas.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="Menu_Close" Header="E_xit" Command="Close" InputGestureText="Alt+F4" />
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem x:Name="Menu_Help" Header="How To _Use" Command="Help" InputGestureText="F1" />
+                <MenuItem x:Name="Menu_About" Header="_About" Command="Properties" />
+            </MenuItem>
+        </Menu>
+
+        <Grid x:Name="MapWindow" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="400" />
+                <RowDefinition Height="200*" />
+            </Grid.RowDefinitions>
+            <local:Editor x:Name="MapEditor" />
+            <DockPanel Grid.Row="1" VerticalAlignment="Top" Margin="5">
+                <Border BorderBrush="Gray" BorderThickness="1" DockPanel.Dock="Left">
+                    <StackPanel>
+                        <Label Content="Mode:" />
+                        <RadioButton x:Name="Mode_Terrain" GroupName="EditorMode" Content="Terrain" Margin="2" Checked="Mode_Terrain_Checked" />
+                        <RadioButton GroupName="EditorMode" Content="Location" Margin="2" Checked="Mode_Location_Checked" />
+                        <RadioButton GroupName="EditorMode" Content="Explosion" Margin="2" Checked="Mode_Explosion_Checked" />
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="LightGray" BorderThickness=".5" DockPanel.Dock="Right">
+                    <StackPanel Margin="5">
+                        <CheckBox x:Name="Settings_Show_Grid" Content="Show Grid" IsChecked="True" Margin="5" Checked="GridVisibilityToggleEventHandler" Unchecked="GridVisibilityToggleEventHandler" />
+                        <CheckBox x:Name="Settings_Show_Locations" Content="Show Locations" IsChecked="True" Margin="5" Checked="LocationVisibilityToggleEventHandler" Unchecked="LocationVisibilityToggleEventHandler" IsEnabled="False" />
+                    </StackPanel>
+                </Border>
+
+                <Grid>
+
+                    <Border BorderBrush="LightGray" BorderThickness="0.5">
+                        <panels:TerrainPanel x:Name="Panel_Terrain" />
+                    </Border>
+                    <Border BorderBrush="LightGray" BorderThickness="0.5">
+                        <panels:LocationPanel x:Name="Panel_Location" />
+                    </Border>
+                    <Border BorderBrush="LightGray" BorderThickness="0.5">
+                        <panels:ExplosionPanel x:Name="Panel_Explosion" />
+                    </Border>
+
+
+                </Grid>
+            </DockPanel>
+        </Grid>
+
+        <local:CodeGenerator x:Name="CodeWindow" Grid.Row="1" Visibility="Hidden" Grid.RowSpan="1" />
+        <Button x:Name="Toggle_Code" Content="Switch to Code Generation Mode" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Margin="5" Click="CodeToggleEventHandler" />
+    </Grid>
+</Window>

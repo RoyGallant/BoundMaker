@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="BoundMaker.Views.Panels.LocationPanel" x:Name="Panel_Location" Visibility="Hidden"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <Grid Background="#dddddd">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="450"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="1">
+            <Label HorizontalAlignment="Center">Naming Convention:</Label>
+            <Label x:Name="Location_Name_Preview" Background="#333333" Foreground="White" Margin="100 15" HorizontalContentAlignment="Center" Content="1" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBox x:Name="Location_Name_Prefix" Width="100" TextChanged="Location_Naming_Changed" />
+                <ComboBox x:Name="Location_Name_CountingType" SelectionChanged="Location_Naming_Changed">
+                    <ComboBoxItem x:Name="Location_Name_CountingType_Numeric_Lead" IsSelected="True">Numeric (Leading 0's)</ComboBoxItem>
+                    <ComboBoxItem x:Name="Location_Name_CountingType_Numeric_NoLead">Numeric (No Leading 0's)</ComboBoxItem>
+                    <ComboBoxItem x:Name="Location_Name_CountingType_Alphabetic_Upper">Alphabetic (A, B, C...)</ComboBoxItem>
+                    <ComboBoxItem x:Name="Location_Name_CountingType_Alphabetic_Lower">Alphabetic (a, b, c...)</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

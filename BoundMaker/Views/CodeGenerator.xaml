@@ -1,0 +1,62 @@
+﻿<DockPanel x:Class="BoundMaker.Views.CodeGenerator"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Top" Margin="5">
+        <Border BorderBrush="Gray" BorderThickness="1" DockPanel.Dock="Left">
+            <StackPanel>
+                <RadioButton x:Name="CodeType_Scmdraft" GroupName="Code" Content="SCMDraft 2" Margin="2" IsChecked="True" />
+                <RadioButton x:Name="CodeType_Starforge" GroupName="Code" Content="Starforge" Margin="2" />
+                <!--<RadioButton x:Name="CodeType_SomeOtherEditor" GroupName="Code" Content="Some Other" Margin="2" />-->
+            </StackPanel>
+        </Border>
+        <Border BorderBrush="LightGray" BorderThickness=".5" DockPanel.Dock="Right">
+            <Button Content="Generate!" Width="100" VerticalAlignment="Stretch" Click="GenerateButtonClickedEventHandler" />
+        </Border>
+
+        <Grid>
+            <Border BorderBrush="LightGray" BorderThickness="0.5">
+                <Grid x:Name="Panel_Code" Background="#dddddd">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="125"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                        <Label>Add a line break for every</Label>
+                        <TextBox x:Name="Line_Break" Width="30" Height="24" TextAlignment="Right" Text="60" Background="#cccccc" TextChanged="LineBreakTextChangedEventHandler" />
+                        <Label>actions. (Leave blank to disable)</Label>
+                    </StackPanel>
+                    <CheckBox x:Name="Add_Preserve" Content="Add 'Preserve Trigger' before each line break" Margin="5 0" Grid.Row="2" IsChecked="True" />
+                    <Label Grid.Column="1" Grid.Row="0" Content="Unit Owner:" />
+
+                    <ComboBox x:Name="Code_Unit_Owner" Grid.Column="1" Grid.Row="1" Margin="10 0">
+                        <ComboBoxItem Content="Player 1"/>
+                        <ComboBoxItem Content="Player 2"/>
+                        <ComboBoxItem Content="Player 3"/>
+                        <ComboBoxItem Content="Player 4"/>
+                        <ComboBoxItem Content="Player 5"/>
+                        <ComboBoxItem Content="Player 6"/>
+                        <ComboBoxItem Content="Player 7"/>
+                        <ComboBoxItem Content="Player 8" />
+                        <ComboBoxItem Content="Current Player" IsSelected="True" />
+                    </ComboBox>
+                </Grid>
+            </Border>
+
+        </Grid>
+
+    </DockPanel>
+
+    <Border BorderBrush="Black" BorderThickness="1" Margin="5">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <TextBox x:Name="Code_Output" Grid.Row="0" IsReadOnly="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="Trigger ouput will go here."/>
+        </ScrollViewer>
+    </Border>
+</DockPanel>

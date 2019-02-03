@@ -1,0 +1,19 @@
+﻿<Dictionary>
+  <Words>
+    <Unrecognized>
+    </Unrecognized>
+    <Recognized>
+      <Word>Protoss</Word>
+      <Word>Zerg</Word>
+      <Word>Terran</Word>
+      <Word>Battlecruiser</Word>
+      <Word>ScmDraft</Word>
+      <Word>Starforge</Word>
+    </Recognized>
+  </Words>
+  <Acronyms>
+    <CasingExceptions>
+      <Acronym>SF</Acronym>
+    </CasingExceptions>
+  </Acronyms>
+</Dictionary>
