@@ -11,7 +11,7 @@ Bound Maker is a StarCraft Brood War mapmaking utility for quickly mocking up bo
 
 ### Installation
 
-Check Releases.
+Check [Releases](https://github.com/RoyGallant/BoundMaker/releases) for binaries.
 
 ### Development
 
