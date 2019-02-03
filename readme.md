@@ -17,7 +17,12 @@ Check [Releases](https://github.com/RoyGallant/BoundMaker/releases) for binaries
 
 The vast majority of this code was haphazardly thrown together by a college student who had just started learning how to program way back in 2011. That said, it's gone through a hasty cleanup over the course of a weekend to get in a state where it can be uploaded to GitHub.
 
-BoundMaker uses native WPF without any external libraries; getting started should be as simple as pulling down the repo and opening it in Visual Studio (or your preferred IDE). Pull requests for bug fixes, new features, maintenance, and/or testing are welcomed.
+BoundMaker uses native WPF without any external libraries. Your dev environment must include:
+
+- An IDE like Visual Studio with *.NET desktop environment* checked as an install option
+- A compiler that supports C# 7 language features (VS2017 supports this out of the box)
+
+Pull requests for bug fixes, new features, maintenance, and/or testing are welcomed.
 
 ### Todos
 
