@@ -85,10 +85,10 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\BoundMakerFile.cs" />
     <Compile Include="Models\BoundSequence.cs" />
-    <Compile Include="Models\Triggers\ITriggerGenerator.cs" />
-    <Compile Include="Models\Triggers\ScmdraftTriggerGenerator.cs" />
-    <Compile Include="Models\Triggers\StarforgeTriggerGenerator.cs" />
-    <Compile Include="Models\Triggers\TrigEditTriggerGenerator.cs" />
+    <Compile Include="Services\ITriggerGenerator.cs" />
+    <Compile Include="Services\ScmdraftTriggerGenerator.cs" />
+    <Compile Include="Services\StarforgeTriggerGenerator.cs" />
+    <Compile Include="Services\TrigEditTriggerGenerator.cs" />
     <Compile Include="Views\CodeGenerator.xaml.cs">
       <DependentUpon>CodeGenerator.xaml</DependentUpon>
     </Compile>
@@ -111,7 +111,7 @@
       <DependentUpon>TerrainPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="GlobalState.cs" />
-    <Compile Include="Services\XmlHandler.cs" />
+    <Compile Include="Utilities\XmlHandler.cs" />
     <Page Include="Views\CodeGenerator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
