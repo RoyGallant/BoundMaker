@@ -1,6 +1,7 @@
 ﻿using BoundMaker.Models;
 using BoundMaker.Services;
 using BoundMaker.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace BoundMaker.Views
         private bool fileExists = false;
         private string fullFilePath = "";
 
-        private readonly string Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+        private readonly Version Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
         private static string UnsavedIndicator => GlobalState.HasMadeChanges ? "*" : null;
 
         public MainWindow()
@@ -46,7 +47,7 @@ namespace BoundMaker.Views
 
         public void RefreshTitle()
         {
-            Title = $"Bound Maker v{Version} - {currentFileName}{UnsavedIndicator}";
+            Title = $"Bound Maker v{Version.ToString(2)} - {currentFileName}{UnsavedIndicator}";
         }
 
         private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
@@ -312,7 +313,7 @@ namespace BoundMaker.Views
         private void AboutExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             var msg = new StringBuilder();
-            msg.Append($"Bound Maker\nVersion: {Version}\n\nProject Start Date: {ProjectStartDate}\nMade By: {MadeBy}\nEmail: {Email}\n\n");
+            msg.Append($"Bound Maker\nVersion: {Version.ToString(3)}\n\nProject Start Date: {ProjectStartDate}\nMade By: {MadeBy}\nEmail: {Email}\n\n");
             msg.AppendLine("Beta Testers:");
             foreach (string tester in BetaTesters)
             {
