@@ -4,6 +4,7 @@
     {
         public string CreateUnit(string player, string unitName, string locationName)
         {
+            player = player.Replace("Current Player", "CurrentPlayer");
             return $"\tCreateUnit(1, \"{unitName}\", \"{locationName}\", {player});";
         }
 
