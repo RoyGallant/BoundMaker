@@ -1,6 +1,5 @@
 # Bound Maker
 
-http://www.staredit.net/topic/13513/
 Bound Maker is a StarCraft Brood War mapmaking utility for quickly mocking up bounding obstacles, written in C# WPF. It supports:
 
   - Simple tile-based terrain design (aesthetics only)
