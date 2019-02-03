@@ -44,7 +44,7 @@
             <RowDefinition Height="530" />
             <RowDefinition Height="35" />
         </Grid.RowDefinitions>
-        
+
         <Menu x:Name="MainMenu" IsMainMenu="True">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="New" InputGestureText="Ctrl+N">

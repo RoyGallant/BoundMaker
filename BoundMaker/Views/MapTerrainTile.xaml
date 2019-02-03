@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d">
-        <Border x:Name="TileBorder" Style="{StaticResource BorderStyle}">
-            <Image x:Name="TileImage" />
-        </Border>
+    <Border x:Name="TileBorder" Style="{StaticResource BorderStyle}">
+        <Image x:Name="TileImage" />
+    </Border>
 </UserControl>
